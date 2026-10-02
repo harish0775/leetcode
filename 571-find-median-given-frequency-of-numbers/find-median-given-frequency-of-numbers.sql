@@ -31,12 +31,18 @@ ORDER BY num, sr
 ),
 almostfinal AS (
     SELECT
-        FLOOR((COUNT(*) OVER () + 1) / 2) AS r,
-        FLOOR((COUNT(*) OVER () + 2) / 2) AS r2,
-        num,
-        sr,
-        overall_sequence
-    FROM sequence_row
+        (
+select 
+count(overall_sequence)/2 as r
+ from sequence_row) as r,
+  (
+select 
+count(overall_sequence)/2+1 as r2
+ from sequence_row) as r2,
+num,
+sr,
+overall_sequence
+from sequence_row
 ),
 nexfinal as (
 select
