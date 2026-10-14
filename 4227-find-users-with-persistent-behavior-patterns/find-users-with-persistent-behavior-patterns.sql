@@ -24,23 +24,25 @@ streaks AS (
         MIN(action_date) AS start_date,
         MAX(action_date) AS end_date
     FROM grouped
-    GROUP BY user_id, action, group_key
+    GROUP BY user_id, action
     HAVING COUNT(*) >= 5
-),
-ranked AS (
-    SELECT *,
-        ROW_NUMBER() OVER (
-            PARTITION BY user_id
-            ORDER BY streak_length DESC, start_date ASC, action ASC
-        ) AS streak_rank
-    FROM streaks
 )
-SELECT
-    user_id,
-    action,
-    streak_length,
-    start_date,
-    end_date
-FROM ranked
-WHERE streak_rank = 1
+select * from streaks
 ORDER BY streak_length DESC, user_id ASC;
+-- ranked AS (
+--     SELECT *,
+--         ROW_NUMBER() OVER (
+--             PARTITION BY user_id
+--             ORDER BY streak_length DESC, start_date ASC, action ASC
+--         ) AS streak_rank
+--     FROM streaks
+-- )
+-- SELECT
+--     user_id,
+--     action,
+--     streak_length,
+--     start_date,
+--     end_date
+-- FROM ranked
+-- WHERE streak_rank = 1
+-- ORDER BY streak_length DESC, user_id ASC;
