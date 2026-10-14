@@ -3,7 +3,7 @@ WITH numbered AS (
     user_id,
     action_date,
     MIN(action) AS action,
-      ROW_NUMBER() OVER (
+    ROW_NUMBER() OVER (
             PARTITION BY user_id, action
             ORDER BY action_date
         ) AS rn
