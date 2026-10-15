@@ -1,19 +1,14 @@
-/**
- * @param {number[]} nums
- * @return {number}
- */
 var sumCounts = function (nums) {
-    let answer = 0;
+    let sum = 0;
 
     for (let i = 0; i < nums.length; i++) {
-        const distinct = new Set();
+        const unique = new Set();
 
         for (let j = i; j < nums.length; j++) {
-            distinct.add(nums[j]);
-
-            answer += distinct.size ** 2;
+            unique.add(nums[j]);
+            sum += unique.size ** 2;
         }
     }
 
-    return answer;
+    return sum;
 };
