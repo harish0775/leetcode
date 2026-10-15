@@ -1,20 +1,17 @@
-WITH numbered AS (
-    SELECT
-    user_id,
-    action_date,
-    MIN(action) AS action,
-    ROW_NUMBER() OVER (
-            PARTITION BY user_id, action
-            ORDER BY action_date
-        ) AS rn
-    FROM activity
-    GROUP BY user_id, action_date
-    HAVING COUNT(*) = 1
-),
-grouped AS (
-    SELECT *,
-        DATE_SUB(action_date, INTERVAL rn DAY) AS group_key
-    FROM numbered
+with numbered as (
+    select 
+user_id,
+action_date,
+action,
+ROW_NUMBER() OVER(PARTITION BY user_id,action ORDER BY action_date) as rn
+from activity
+group by user_id,action_date
+HAVING Count(*)=1
+),grouped AS (
+ SELECT 
+ *,
+ DATE_SUB(action_date, INTERVAL rn DAY) AS group_key
+ from numbered
 ),
 streaks AS (
     SELECT
@@ -27,22 +24,6 @@ streaks AS (
     GROUP BY user_id, action
     HAVING COUNT(*) >= 5
 )
-select * from streaks
-ORDER BY streak_length DESC, user_id ASC;
--- ranked AS (
---     SELECT *,
---         ROW_NUMBER() OVER (
---             PARTITION BY user_id
---             ORDER BY streak_length DESC, start_date ASC, action ASC
---         ) AS streak_rank
---     FROM streaks
--- )
--- SELECT
---     user_id,
---     action,
---     streak_length,
---     start_date,
---     end_date
--- FROM ranked
--- WHERE streak_rank = 1
--- ORDER BY streak_length DESC, user_id ASC;
+
+select * from streaks ORDER BY streak_length desc,user_id asc;
+
